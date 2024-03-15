@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CategoryModalComponent } from '../category-modal/category-modal.component';
 import { InfiniteScrollCustomEvent, ModalController, RefresherCustomEvent } from '@ionic/angular';
-import { Category, CategoryCriteria } from '../../shared/domain';
+import { Category, CategoryCriteria, SortOption } from '../../shared/domain';
 import { CategoryService } from '../category.service';
 import { ToastService } from '../../shared/service/toast.service';
-import { finalize } from 'rxjs';
+import { debounce, finalize, interval, Subscription } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-category-list',
@@ -16,12 +17,29 @@ export class CategoryListComponent {
   lastPageReached = false;
   loading = false;
   searchCriteria: CategoryCriteria = { page: 0, size: 25, sort: this.initialSort };
+  readonly searchForm: FormGroup;
+  readonly sortOptions: SortOption[] = [
+    { label: 'Created at (newest first)', value: 'createdAt,desc' },
+    { label: 'Created at (oldest first)', value: 'createdAt,asc' },
+    { label: 'Name (A-Z)', value: 'name,asc' },
+    { label: 'Name (Z-A)', value: 'name,desc' },
+  ];
+  private readonly searchFormSubscription: Subscription;
 
   constructor(
     private readonly modalCtrl: ModalController,
     private readonly categoryService: CategoryService,
     private readonly toastService: ToastService,
-  ) {}
+    private readonly formBuilder: FormBuilder,
+  ) {
+    this.searchForm = this.formBuilder.group({ name: [], sort: [this.initialSort] });
+    this.searchFormSubscription = this.searchForm.valueChanges
+      .pipe(debounce((value) => interval(value.name?.length ? 400 : 0)))
+      .subscribe((value) => {
+        this.searchCriteria = { ...this.searchCriteria, ...value, page: 0 };
+        this.loadCategories();
+      });
+  }
 
   //Methode zum Laden der Kategorien hinzufügen
   private loadCategories(next: () => void = () => {}): void {
@@ -68,5 +86,10 @@ export class CategoryListComponent {
     modal.present();
     const { role } = await modal.onWillDismiss();
     if (role === 'refresh') this.reloadCategories();
+  }
+
+  //Search unsubscripe for automatic search after keyinput
+  ionViewDidLeave(): void {
+    this.searchFormSubscription.unsubscribe();
   }
 }
