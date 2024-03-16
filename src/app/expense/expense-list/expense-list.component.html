@@ -68,9 +68,15 @@
 <!-- Footer -->
 <!-- ------- -->
 <ion-toolbar>
-  <div style="display: flex; justify-content: space-between; width: 100%">
-    <ion-icon name="arrow-back-outline" (click)="addMonths(-1)"></ion-icon>
-    <ion-title>{{ date | date: 'MMMM yyyy' }}</ion-title>
-    <ion-icon name="arrow-forward-outline" (click)="addMonths(1)"></ion-icon>
-  </div>
+  <ion-buttons slot="start">
+    <ion-button type="button" (click)="addMonths(-1)">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <ion-title>{{ date | date: 'MMMM yyyy' }}</ion-title>
+  <ion-buttons slot="end">
+    <ion-button type="button" (click)="addMonths(1)">
+      <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
 </ion-toolbar>
