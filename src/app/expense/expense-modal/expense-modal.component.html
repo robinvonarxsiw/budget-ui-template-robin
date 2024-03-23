@@ -13,7 +13,7 @@
     <ion-title>Edit Expense</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="save()">
+      <ion-button (click)="save()" [disabled]="expenseForm.pristine || expenseForm.invalid || submitting">
         <ion-icon slot="start" name="save"></ion-icon>
         Save
       </ion-button>
@@ -24,23 +24,42 @@
 <!-- ------- -->
 <!-- Content -->
 <!-- ------- -->
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [formGroup]="expenseForm">
   <!-- Enter Expense Name -->
   <ion-item>
     <ion-icon name="text" slot="start"></ion-icon>
-    <ion-input maxlength="40" placeholder="Enter the expense's name" required></ion-input>
+    <ion-input
+      [disabled]="submitting"
+      formControlName="name"
+      maxlength="40"
+      placeholder="Enter the expense's name"
+      required="true"
+    ></ion-input>
   </ion-item>
 
   <!--Choose Category-->
   <ion-item>
     <ion-icon name="pricetag" slot="start"></ion-icon>
-    <ion-input maxlength="40" placeholder="Choose a category" required></ion-input>
+    <ion-select interface="popover" placeholder="Choose a category" formControlName="categoryId">
+      <ion-select-option *ngFor="let category of categories" [value]="category.id">{{
+        category.name
+      }}</ion-select-option>
+    </ion-select>
+    <ion-button (click)="showCategoryModal()" slot="end">
+      <ion-icon name="add" slot="icon-only"></ion-icon>
+    </ion-button>
   </ion-item>
 
   <!--Enter Amount CHF-->
   <ion-item>
     <ion-icon name="cash" slot="start"></ion-icon>
-    <ion-input maxlength="40" placeholder="Enter the amount in CHF" required></ion-input>
+    <ion-input
+      formControlName="amount"
+      maxlength="40"
+      placeholder="Enter the amount in CHF"
+      required="true"
+      type="number"
+    ></ion-input>
     <ion-note slot="end">CHF</ion-note>
   </ion-item>
 
