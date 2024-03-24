@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { filter, from } from 'rxjs';
 import { CategoryModalComponent } from '../../category/category-modal/category-modal.component';
@@ -8,15 +8,19 @@ import { ExpenseService } from '../expense.service';
 import { CategoryService } from '../../category/category.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from '../../shared/service/toast.service';
-import { formatISO, parseISO } from 'date-fns';
+import { format, formatISO, parseISO } from 'date-fns';
 
 @Component({
   selector: 'app-expense-modal',
   templateUrl: './expense-modal.component.html',
 })
-export class ExpenseModalComponent {
-  readonly expenseForm: FormGroup;
-  submitting = false;
+export class ExpenseModalComponent implements OnInit {
+  ngOnInit(): void {
+    const { id, amount, category, date, name } = this.expense;
+    if (category) this.categories.push(category);
+    if (id) this.expenseForm.patchValue({ id, amount, categoryId: category?.id, date, name });
+    this.loadAllCategories();
+  }
 
   categories: Category[] = [];
   expense: Expense = {} as Expense;
@@ -38,6 +42,9 @@ export class ExpenseModalComponent {
     });
   }
 
+  readonly expenseForm: FormGroup;
+  submitting = false;
+
   // Load all categories
   private loadAllCategories(): void {
     this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
@@ -53,11 +60,19 @@ export class ExpenseModalComponent {
 
   // Save Methode
   save(): void {
-    this.modalCtrl.dismiss(null, 'save');
-    this.expenseService.upsertExpense({
-      ...this.expenseForm.value,
-      date: formatISO(parseISO(this.expenseForm.value.date), { representation: 'date' }),
-    });
+    this.submitting = true;
+    this.expenseService
+      .upsertExpense({
+        ...this.expenseForm.value,
+        date: formatISO(parseISO(this.expenseForm.value.date), { representation: 'date' }),
+      })
+      .subscribe({
+        next: () => {
+          this.toastService.displaySuccessToast('Expense saved');
+          this.modalCtrl.dismiss(null, 'refresh');
+        },
+        error: (error) => this.toastService.displayErrorToast('Could not save Expense', error),
+      });
   }
 
   // Delete Methode
