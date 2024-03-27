@@ -66,13 +66,35 @@
       <ion-label> No expenses found</ion-label>
     </ion-item>
 
-    <!-- Expenses -->
+    <!-- Group Expenses and create button to see details -->
     <ng-container *ngSwitchDefault>
       <ion-item-group *ngFor="let expenseGroup of expenseGroups">
         <ion-item-divider>
           <ion-label>{{ expenseGroup.date | date: 'dd.MM.yyyy' }}</ion-label>
         </ion-item-divider>
-        <ion-item *ngFor="let expense of expenseGroup.expenses"> </ion-item>
+        <ion-item
+          button="true"
+          *ngFor="let expense of expenseGroup.expenses"
+          [detail]="true"
+          [disabled]="loading"
+          (click)="openModal(expense)"
+        >
+          <ion-label>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  {{ expense.name }}
+                </ion-col>
+                <ion-col>
+                  {{ expense.category?.name }}
+                </ion-col>
+                <ion-col>
+                  {{ expense.amount }}
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-label>
+        </ion-item>
       </ion-item-group>
     </ng-container>
   </ion-list>

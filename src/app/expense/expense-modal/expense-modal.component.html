@@ -10,7 +10,7 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title>Edit Expense</ion-title>
+    <ion-title>{{ expense.id ? 'Edit' : 'Add' }} Expense</ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="save()" [disabled]="expenseForm.pristine || expenseForm.invalid || submitting">
