@@ -85,6 +85,7 @@ export class ExpenseListComponent {
   //Methode um Monate hinzuzufügen
   addMonths = (number: number): void => {
     this.date = addMonths(this.date, number);
+    this.reloadExpenses();
   };
 
   //Methode für Refresher
@@ -100,6 +101,7 @@ export class ExpenseListComponent {
     });
     modal.present();
     const { role } = await modal.onWillDismiss();
+    if (role === 'refresh') this.loadExpenses();
     console.log('role', role);
   }
 }
