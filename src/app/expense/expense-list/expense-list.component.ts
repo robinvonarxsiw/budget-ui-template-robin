@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { addMonths, set } from 'date-fns';
-import { ModalController } from '@ionic/angular';
+import { ModalController, RefresherCustomEvent } from '@ionic/angular';
 import { ExpenseModalComponent } from '../expense-modal/expense-modal.component';
 import { Expense, ExpenseCriteria } from '../../shared/domain';
 import { FormBuilder } from '@angular/forms';
@@ -86,6 +86,12 @@ export class ExpenseListComponent {
   addMonths = (number: number): void => {
     this.date = addMonths(this.date, number);
   };
+
+  //Methode für Refresher
+  reloadExpenses($event?: any): void {
+    this.searchCriteria.page = 0;
+    this.loadExpenses(() => ($event ? ($event as RefresherCustomEvent).target.complete() : {}));
+  }
 
   async openModal(expense?: Expense): Promise<void> {
     const modal = await this.modalCtrl.create({
