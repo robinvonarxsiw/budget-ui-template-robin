@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { addMonths, set } from 'date-fns';
 import { InfiniteScrollCustomEvent, ModalController, RefresherCustomEvent } from '@ionic/angular';
 import { ExpenseModalComponent } from '../expense-modal/expense-modal.component';
-import { Expense, ExpenseCriteria } from '../../shared/domain';
+import { Expense, ExpenseCriteria, SortOption } from '../../shared/domain';
 import { FormBuilder } from '@angular/forms';
 import { CategoryService } from '../../category/category.service';
 import { ToastService } from '../../shared/service/toast.service';
@@ -26,6 +26,15 @@ export class ExpenseListComponent {
   lastPageReached = false;
   loading = false;
   searchCriteria: ExpenseCriteria = { page: 0, size: 25, sort: this.initialSort };
+
+  readonly sortOptions: SortOption[] = [
+    { label: 'Created at (newest first)', value: 'createdAt,desc' },
+    { label: 'Created at (oldest first)', value: 'createdAt,asc' },
+    { label: 'Date (newest first)', value: 'date,asc' },
+    { label: 'Date (oldest first)', value: 'date,desc' },
+    { label: 'Name (A-Z)', value: 'name,asc' },
+    { label: 'Name (Z-A)', value: 'name,desc' },
+  ];
 
   constructor(
     private readonly modalCtrl: ModalController,

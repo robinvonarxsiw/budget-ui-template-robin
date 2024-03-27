@@ -87,6 +87,5 @@ export class ExpenseModalComponent implements OnInit {
     categoryModal.present();
     const { role } = await categoryModal.onWillDismiss();
     if (role === 'refresh') this.loadAllCategories();
-    console.log('role', role);
   }
 }
