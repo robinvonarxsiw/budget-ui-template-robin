@@ -31,7 +31,7 @@ export interface SortOption {
 // --------
 
 export interface Category {
-  id?: string;
+  id?: string | null;
   name: string;
 }
 

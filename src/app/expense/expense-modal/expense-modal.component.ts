@@ -48,7 +48,9 @@ export class ExpenseModalComponent implements OnInit {
   // Load all categories
   private loadAllCategories(): void {
     this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
-      next: (categories) => (this.categories = categories),
+      next: (categories) => {
+        this.categories = [{ id: null, name: '' }, ...categories];
+      },
       error: (error) => this.toastService.displayErrorToast('Could not load categories', error),
     });
   }
