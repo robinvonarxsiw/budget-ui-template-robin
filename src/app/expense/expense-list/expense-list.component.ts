@@ -33,8 +33,8 @@ export class ExpenseListComponent {
   readonly sortOptions: SortOption[] = [
     { label: 'Created at (newest first)', value: 'createdAt,desc' },
     { label: 'Created at (oldest first)', value: 'createdAt,asc' },
-    { label: 'Date (newest first)', value: 'date,asc' },
-    { label: 'Date (oldest first)', value: 'date,desc' },
+    { label: 'Date (newest first)', value: 'date,desc' },
+    { label: 'Date (oldest first)', value: 'date,asc' },
     { label: 'Name (A-Z)', value: 'name,asc' },
     { label: 'Name (Z-A)', value: 'name,desc' },
   ];
