@@ -85,7 +85,7 @@
                 </ion-col>
                 <ion-col class="ion-text-center" *ngIf="expense.category">
                   <ion-icon name="pricetag"></ion-icon>
-                  {{ expense.category?.name }}
+                  {{ expense.category.name }}
                 </ion-col>
                 <ion-col class="ion-text-end">
                   {{ expense.amount | currency: 'CHF' }}
