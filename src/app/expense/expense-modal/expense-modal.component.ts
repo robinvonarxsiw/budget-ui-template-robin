@@ -49,7 +49,7 @@ export class ExpenseModalComponent implements OnInit {
   private loadAllCategories(): void {
     this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
       next: (categories) => {
-        this.categories = [{ id: null, name: '' }, ...categories];
+        this.categories = [{ id: '', name: '' }, ...categories];
       },
       error: (error) => this.toastService.displayErrorToast('Could not load categories', error),
     });
@@ -63,9 +63,11 @@ export class ExpenseModalComponent implements OnInit {
   // Save Methode
   save(): void {
     this.submitting = true;
+    const categoryId = this.expenseForm.value.categoryId === '' ? null : this.expenseForm.value.categoryId; //set categoryId to null if empty string
     this.expenseService
       .upsertExpense({
         ...this.expenseForm.value,
+        categoryId: categoryId, //Ensure categoryId is null if empty string
         date: formatISO(parseISO(this.expenseForm.value.date), { representation: 'date' }),
       })
       .subscribe({
