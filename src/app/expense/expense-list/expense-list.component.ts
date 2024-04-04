@@ -110,6 +110,8 @@ export class ExpenseListComponent {
   //Methode um Monate hinzuzufügen
   addMonths = (number: number): void => {
     this.date = addMonths(this.date, number);
+    // ExpenseGroups zurücksetzen, um Skeleton anzuzeigen
+    this.expenseGroups = null;
     this.reloadExpenses();
   };
 

@@ -4,13 +4,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button color="medium" (click)="cancel()">
+      <ion-button color="medium" (click)="cancel()" [disabled]="submitting">
         <ion-icon slot="start" name="close"></ion-icon>
         Cancel
       </ion-button>
     </ion-buttons>
 
     <ion-title>{{ expense.id ? 'Edit' : 'Add' }} Expense</ion-title>
+    <ion-progress-bar *ngIf="submitting" type="indeterminate"></ion-progress-bar>
 
     <ion-buttons slot="end">
       <ion-button (click)="save()" [disabled]="expenseForm.pristine || expenseForm.invalid || submitting">
@@ -40,7 +41,12 @@
   <!--Choose Category-->
   <ion-item>
     <ion-icon name="pricetag" slot="start"></ion-icon>
-    <ion-select interface="popover" placeholder="Choose a category" formControlName="categoryId">
+    <ion-select
+      interface="popover"
+      placeholder="Choose a category"
+      formControlName="categoryId"
+      [disabled]="submitting"
+    >
       <ion-select-option *ngFor="let category of categories" [value]="category.id">{{
         category.name
       }}</ion-select-option>
@@ -54,6 +60,7 @@
   <ion-item>
     <ion-icon name="cash" slot="start"></ion-icon>
     <ion-input
+      [disabled]="submitting"
       formControlName="amount"
       maxlength="40"
       placeholder="Enter the amount in CHF"
@@ -66,7 +73,7 @@
   <!-- Choose date from calendar -->
   <ion-item>
     <ion-icon slot="start" name="calendar"></ion-icon>
-    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+    <ion-datetime-button datetime="datetime" [disabled]="submitting"></ion-datetime-button>
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
         <ion-datetime presentation="date" id="datetime" formControlName="date"></ion-datetime>
