@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { filter, from } from 'rxjs';
+import { filter, finalize, from, mergeMap, tap } from 'rxjs';
 import { CategoryModalComponent } from '../../category/category-modal/category-modal.component';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
 import { Category, Expense } from '../../shared/domain';
@@ -77,11 +77,22 @@ export class ExpenseModalComponent implements OnInit {
       });
   }
 
-  // Delete Methode
+  //Delete Methode --> Expense löschen
   delete(): void {
     from(this.actionSheetService.showDeletionConfirmation('Are you sure you want to delete this expense?'))
-      .pipe(filter((action) => action === 'delete'))
-      .subscribe(() => this.modalCtrl.dismiss(null, 'delete'));
+      .pipe(
+        filter((action) => action === 'delete'),
+        tap(() => (this.submitting = true)),
+        mergeMap(() => this.expenseService.deleteExpense(this.expense.id!)),
+        finalize(() => (this.submitting = false)),
+      )
+      .subscribe({
+        next: () => {
+          this.toastService.displaySuccessToast('Category deleted');
+          this.modalCtrl.dismiss(null, 'refresh');
+        },
+        error: (error) => this.toastService.displayErrorToast('Could not delete category', error),
+      });
   }
 
   async showCategoryModal(): Promise<void> {
