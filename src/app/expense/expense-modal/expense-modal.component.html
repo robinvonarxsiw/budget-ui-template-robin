@@ -47,9 +47,9 @@
       formControlName="categoryId"
       [disabled]="submitting"
     >
-      <ion-select-option *ngFor="let category of categories" [value]="category.id">{{
-        category.name
-      }}</ion-select-option>
+      <ion-select-option *ngFor="let category of categories" [value]="category.id"
+        >{{ category.name }}
+      </ion-select-option>
     </ion-select>
     <ion-button (click)="showCategoryModal()" slot="end">
       <ion-icon name="add" slot="icon-only"></ion-icon>
@@ -73,10 +73,18 @@
   <!-- Choose date from calendar -->
   <ion-item>
     <ion-icon slot="start" name="calendar"></ion-icon>
-    <ion-datetime-button datetime="datetime" [disabled]="submitting"></ion-datetime-button>
+    <ion-datetime-button datetime="datetime" [disabled]="submitting"> </ion-datetime-button>
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
-        <ion-datetime presentation="date" id="datetime" formControlName="date"></ion-datetime>
+        <ion-datetime
+          locale="en-CH"
+          presentation="date"
+          id="datetime"
+          formControlName="date"
+          [showDefaultButtons]="true"
+        >
+          <span slot="title">ENTER THE DATE OF THE EXPENSE</span>
+        </ion-datetime>
       </ng-template>
     </ion-modal>
   </ion-item>
